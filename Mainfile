@@ -1,0 +1,84 @@
+def displayboard(a):
+    print(a[7] + '|' + a[8] + '|' + a[9])
+    print(a[4] + '|' + a[5] + '|' + a[6])
+    print(a[1] + '|' + a[2] + '|' + a[3])
+def player_input(a):
+    marker = ''
+    while not (marker == 'X' or marker == 'O'):
+        marker = input(a + '  do you want X or O?').upper()
+    if(marker == 'X'):
+        return('X','O')
+    else:
+        return('O','X')        
+def place_marker(position,board,marker):
+    if space_check(position,board):
+        board[position] = marker
+def win_check(board,marker):
+    return ((board[1] == marker and board[2] == marker and board[3] == marker) or
+    (board[4] == marker and board[5] == marker and board[6] == marker) or
+    (board[7] == marker and board[8] == marker and board[9] == marker) or
+    (board[1] == marker and board[4] == marker and board[7] == marker) or
+    (board[2] == marker and board[5] == marker and board[8] == marker) or 
+    (board[3] == marker and board[6] == marker and board[9] == marker) or
+    (board[1] == marker and board[5] == marker and board[9] == marker) or
+    (board[3] == marker and board[5] == marker and board[7] == marker))
+import random
+def choose_first():
+    if random.randint(0,1) == 0:
+        return 'player2'
+    else:
+        return 'player1'
+def space_check(position,board):
+    return board[position] == ' '
+def player_choice(turn,board):
+    position = 0
+    while position not in [1,2,3,4,5,6,7,8,9] or not space_check(position,board):
+        position = int(input('Please  ' + turn + '  enter the input position'))
+    return position
+def full_board_check(board):
+    for i in range(1,10):
+        if space_check(i,board):
+            return False
+    return True
+newgame = 'on'
+while not newgame == 'off':
+    board=[' '] * 10
+    turn = choose_first()
+    print( turn + 'Turns first')
+    play_game = input('Are you ready to play? Enter Yes or No.')
+    if play_game.lower()[0] == 'y':
+        game = 'on'
+    else:
+        game = 'off'
+    if (turn == 'player1'):
+        player1_marker,player2_marker = player_input(turn)
+    else:
+        player2_marker,player1_marker = player_input(turn)
+    while not (game == 'off'):
+        if(turn == 'player1'):
+            position = player_choice(turn,board)
+            place_marker(position,board,player1_marker)
+            displayboard(board)
+            if win_check(board,player1_marker):
+                print('Congratulations' + turn + 'Won the game')
+                game = 'off'
+            else:
+                if full_board_check(board):
+                    print('the game is draw!!!!!!!!!!!')
+                    game = 'off'
+                else:
+                    turn =  'player2'
+        else:
+            position = player_choice(turn,board)
+            place_marker(position,board,player2_marker)
+            displayboard(board)
+            if win_check(board,player2_marker):
+                print('Congratulations' + turn + 'Won the game')
+                game = 'off'
+            else:
+                if full_board_check(board):
+                    print('the game is draw!!!!!!!!!!!')
+                    game = 'off'
+                else:
+                    turn =  'player1'
+    newgame = input('please write OFF if you do not wish to continue').lower()
